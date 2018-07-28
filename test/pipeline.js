@@ -16,7 +16,7 @@ describe('embl', () => {
                 0x81,
                 0x00]);
             encoder.on('data', (chunk) => {
-                assert.equal(chunk.toString('hex'), buffer.toString('hex'));
+                assert.strictEqual(chunk.toString('hex'), buffer.toString('hex'));
                 done();
             });
             decoder.pipe(encoder);
@@ -41,9 +41,9 @@ describe('embl', () => {
                 }]);
 
             encoder.pipe(decoder).on('data', (data) => {
-                assert.equal(data[1].name, 'Cluster');
-                assert.equal(data[1].start, 0);
-                assert.equal(data[1].end, -1);
+                assert.strictEqual(data[1].name, 'Cluster');
+                assert.strictEqual(data[1].start, 0);
+                assert.strictEqual(data[1].end, -1);
                 done();
             });
         });

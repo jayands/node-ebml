@@ -11,7 +11,7 @@
     ecmaVersion: 6
     ecmaFeatures:
       scriptType: "module"
-  extends: "standard"
+  extends: "semistandard"
   rules:
     indent: [error, 4]
 

@@ -6,8 +6,8 @@ describe('embl', () => {
         describe('#readVint()', () => {
             function readVint (buffer, expected) {
                 const vint = ebml.tools.readVint(buffer, 0);
-                assert.equal(expected, vint.value);
-                assert.equal(buffer.length, vint.length);
+                assert.strictEqual(expected, vint.value);
+                assert.strictEqual(buffer.length, vint.length);
             }
 
             it('should read the correct value for all 1 byte ints', () => {
@@ -18,12 +18,14 @@ describe('embl', () => {
             it('should read the correct value for 1 byte int with non-zero start', () => {
                 const b = Buffer.from([0x00, 0x81]);
                 const vint = ebml.tools.readVint(b, 1);
-                assert.equal(1, vint.value);
-                assert.equal(1, vint.length);
+                assert.strictEqual(1, vint.value);
+                assert.strictEqual(1, vint.length);
             });
             it('should read the correct value for all 2 byte ints', () => {
-                for (let i = 0; i < 0x40; i++) for (let j = 0; j < 0xff; j++) {
-                    readVint(Buffer.from([i | 0x40, j]), (i << 8) + j);
+                for (let i = 0; i < 0x40; i++) {
+                    for (let j = 0; j < 0xff; j++) {
+                        readVint(Buffer.from([i | 0x40, j]), (i << 8) + j);
+                    }
                 }
             });
             it('should read the correct value for all 3 byte ints', () => {
@@ -146,7 +148,7 @@ describe('embl', () => {
         describe('#writeVint()', () => {
             function writeVint (value, expected) {
                 const actual = ebml.tools.writeVint(value);
-                assert.equal(expected.toString('hex'), actual.toString('hex'));
+                assert.strictEqual(expected.toString('hex'), actual.toString('hex'));
             }
 
             it('should throw when writing -1', () => {
@@ -258,7 +260,6 @@ describe('embl', () => {
                     ebml.tools.writeVint(Math.pow(2, 56) + 1);
                 }, /Unrepresentable value/);
             });
-
         });
     });
 });

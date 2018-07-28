@@ -6,7 +6,7 @@ describe('embl', () => {
         function createEncoder (expected, done) {
             const encoder = new ebml.Encoder();
             encoder.on('data', (chunk) => {
-                assert.equal(chunk.toString('hex'), Buffer.from(expected).toString('hex'));
+                assert.strictEqual(chunk.toString('hex'), Buffer.from(expected).toString('hex'));
                 done();
             });
 
