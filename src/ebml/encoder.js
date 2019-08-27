@@ -1,5 +1,4 @@
 import { Transform } from 'stream';
-import Buffers from 'buffers';
 import schema from './schema';
 import tools from './tools';
 
@@ -7,9 +6,9 @@ const debug = require('debug')('ebml:encoder');
 
 function encodeTag(tagId, tagData, end) {
   if (end === -1) {
-    return Buffers([tagId, Buffer.from('01ffffffffffffff', 'hex'), tagData]);
+    return Array.from([tagId, Buffer.from('01ffffffffffffff', 'hex'), tagData]);
   }
-  return Buffers([tagId, tools.writeVint(tagData.length), tagData]);
+  return Array.from([tagId, tools.writeVint(tagData.length), tagData]);
 }
 
 /**
@@ -75,13 +74,14 @@ export default class EbmlEncoder extends Transform {
    */
   _transform(chunk, enc, done) {
     const [tag, { data, name, ...rest }] = chunk;
+    /* istanbul ignore if */
     if (debug.enabled) {
       debug(`encode ${tag} ${name}`);
     }
 
     switch (tag) {
       case 'start':
-        this.startTag(name, { name, data, ...rest });
+        this.startTag(name, { ...rest });
         break;
       case 'tag':
         this.writeTag(name, data);
@@ -93,7 +93,7 @@ export default class EbmlEncoder extends Transform {
         break;
     }
 
-    done();
+    return done();
   }
 
   /**
@@ -102,24 +102,30 @@ export default class EbmlEncoder extends Transform {
    */
   flush(done = () => {}) {
     if (!this.buffer || this.corked) {
+      /* istanbul ignore if */
       if (debug.enabled) {
         debug('no buffer/nothing pending');
       }
-      done();
-
-      return;
+      return done();
     }
 
+    if (this.buffer.byteLength === 0) {
+      /* istanbul ignore if */
+      if (debug.enabled) {
+        debug('empty buffer');
+      }
+      return done();
+    }
+
+    /* istanbul ignore if */
     if (debug.enabled) {
       debug(`writing ${this.buffer.length} bytes`);
     }
 
-    // console.info(`this.buffer.toBuffer = ${this.buffer.buffer}`);
-
     const chunk = Buffer.from(this.buffer);
     this.buffer = null;
     this.push(chunk);
-    done();
+    return done();
   }
 
   /**
@@ -127,11 +133,7 @@ export default class EbmlEncoder extends Transform {
    * @param {Buffer | Buffer[]} buffer
    */
   bufferAndFlush(buffer) {
-    if (this.buffer) {
-      this.buffer = tools.concatenate(this.buffer, buffer);
-    } else {
-      this.buffer = Buffers(buffer);
-    }
+    this.buffer = tools.concatenate(this.buffer, buffer);
     this.flush();
   }
 
@@ -210,11 +212,12 @@ export default class EbmlEncoder extends Transform {
   }
 
   endTag() {
-    const tag = this.stack.pop();
-
+    const tag = this.stack.pop() || {
+      children: [],
+      data: { buffer: Buffer.from([]) },
+    };
     const childTagDataBuffers = tag.children.map(child => child.data);
-    tag.data = encodeTag(tag.id, Buffers(childTagDataBuffers), tag.end);
-
+    tag.data = encodeTag(tag.id, Array.from(childTagDataBuffers), tag.end);
     if (this.stack.length < 1) {
       this.bufferAndFlush(tag.data.buffer);
     }
