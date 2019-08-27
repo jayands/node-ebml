@@ -1,13 +1,19 @@
 import assert from 'assert';
+import unexpected from 'unexpected';
+import unexpectedDate from 'unexpected-date';
 import Encoder from './encoder';
 
+const expect = unexpected.clone().use(unexpectedDate);
+
+jest.dontMock('debug');
 describe('EBML', () => {
   describe('Encoder', () => {
     function createEncoder(expected, done) {
       const encoder = new Encoder();
       encoder.on('data', chunk => {
-        assert.strictEqual(
+        expect(
           chunk.toString('hex'),
+          'to be',
           Buffer.from(expected).toString('hex'),
         );
         encoder.on('finish', done);
@@ -61,6 +67,11 @@ describe('EBML', () => {
         encoder.cork();
         encoder.write(['end', { name: 'EBML' }]);
         encoder.flush();
+        // expect(
+        //   encoder.buffer,
+        //   'to satisfy',
+        //   Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x00]),
+        // );
         assert.ok(
           encoder.buffer,
           Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x00]),
@@ -78,6 +89,11 @@ describe('EBML', () => {
         encoder.cork();
         encoder.write(['end', { name: 'EBML' }]);
         encoder.flush();
+        // expect(
+        //   encoder.buffer,
+        //   'to satisfy',
+        //   Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x00]),
+        // );
         assert.ok(
           encoder.buffer,
           Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x00]),
@@ -102,15 +118,15 @@ describe('EBML', () => {
       });
       it('does nothing with invalid tag data', () => {
         encoder.writeTag('EBMLVersion', null);
-        assert.strictEqual(encoder.stack.length, 0);
+        expect(encoder.stack.length, 'to equal', 0);
       });
       it('throws with an invalid tag name', () => {
-        assert.throws(
+        expect(
           () => {
             encoder.writeTag('404NotFound');
           },
+          'to throw',
           /No schema entry found/,
-          'Not throwing properly',
         );
       });
     });
@@ -120,12 +136,40 @@ describe('EBML', () => {
         encoder = new Encoder();
       });
       it('throws with an invalid tag name', () => {
-        assert.throws(
+        expect(
           () => {
             encoder.startTag('404NotFound', { end: -1 });
           },
+          'to throw',
           /No schema entry found/,
-          'Not throwing properly',
+        );
+      });
+      it('creates a valid tag when presented', () => {
+        encoder.startTag('ChapterTrackNumber', { end: -1 });
+        expect(encoder.stack, 'not to be empty')
+          .and('to have length', 1)
+          .and('to satisfy', [
+            {
+              data: expect.it('to be null'),
+              id: expect.it('to equal', 0x89),
+              name: expect.it('to equal', 'ChapterTrackNumber'),
+              children: expect.it('to be an array').and('to be empty'),
+            },
+          ]);
+      });
+      it('creates a valid tag when presented with a stack already present', () => {
+        encoder.stack = [
+          {
+            data: 1,
+            id: 0x89,
+            name: 'ChapterTrackNumber',
+            children: [],
+          },
+        ];
+        encoder.startTag('ChapterTimeStart', { end: 0x80 });
+        expect(encoder.stack[0].children, 'not to be empty').and(
+          'to have length',
+          1,
         );
       });
     });
@@ -133,8 +177,7 @@ describe('EBML', () => {
       it('should do nothing on an invalid tag', () => {
         const encoder = new Encoder();
         encoder.write(['404NotFound', { name: 'EBML' }]);
-        assert.notStrictEqual(encoder.buffer instanceof Buffer);
-        assert.ok(encoder.buffer == null);
+        expect(encoder.buffer, 'to be null');
       });
     });
     describe('#_bufferAndFlush', () => {
@@ -144,15 +187,15 @@ describe('EBML', () => {
         encoder = new Encoder();
       });
       it('should create a new buffer (but still be empty after eval) with an empty buffer', () => {
-        assert.ok(encoder.buffer == null);
+        expect(encoder.buffer, 'to be null');
         encoder._bufferAndFlush(Buffer.from([0x42, 0x86, 0x81, 0x01]));
-        assert.ok(encoder.buffer == null);
+        expect(encoder.buffer, 'to be null');
       });
       it('should append to the buffer (and empty after eval) with an existing buffer', () => {
         encoder.buffer = Buffer.from([0x42, 0x86, 0x81, 0x01]);
-        assert.ok(encoder.buffer instanceof Buffer);
+        expect(encoder.buffer, 'to be a', Buffer);
         encoder._bufferAndFlush(Buffer.from([0x42, 0x86, 0x81, 0x01]));
-        assert.ok(encoder.buffer == null);
+        expect(encoder.buffer, 'to be null');
       });
       /* eslint-enable no-underscore-dangle */
     });
