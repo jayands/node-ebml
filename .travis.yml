@@ -9,7 +9,7 @@ cache:
 node_js:
   - "node"
   - "lts/*"
-  - "6"
+  - "8"
 
 script:
   - yarn lint

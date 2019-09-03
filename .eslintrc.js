@@ -14,8 +14,9 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     ecmaFeatures: {
-      scriptType: 'module',
+      jsx: false
     },
+    sourceType: 'module',
   },
   extends: [
     'airbnb-base',

@@ -1,10 +1,8 @@
-const LTS = 6; // The current oldest LTS supported by Node
+const LTS = 8; // The current oldest LTS supported by Node
 
 module.exports = api => {
   api.cache.using(() => process.env.NODE_ENV === 'development');
-  const ignores = {
-    ignore: api.env(env => !env.startsWith('test')) ? ['**/*.test.js'] : [],
-  };
+
   const plugins = [
     ['@babel/proposal-class-properties', { loose: false }],
     '@babel/proposal-export-default-from',
@@ -22,9 +20,14 @@ module.exports = api => {
         },
         modules: api.env('test') ? 'commonjs' : false,
         useBuiltIns: 'usage',
+        corejs: 3,
       },
     ],
     '@babel/flow',
   ];
-  return Object.assign({}, ignores, { plugins, presets });
+  if (api.env('test')) {
+    return { plugins, presets };
+  }
+  const ignore = ['**/*.test.js'];
+  return { ignore, plugins, presets };
 };
