@@ -62,7 +62,7 @@
     "husky": "^3.0.5",
     "jest": "^24.5.0",
     "jest-html-reporter": "^2.4.2",
-    "lint-staged": "^9.2.5",
+    "lint-staged": "^9.4.2",
     "lodash.foreach": "^4.5.0",
     "lodash.map": "^4.6.0",
     "lodash.range": "^3.2.0",
