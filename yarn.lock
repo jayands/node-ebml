@@ -4984,11 +4984,6 @@ levelup@^0.18.2:
     semver "~2.3.1"
     xtend "~3.0.0"
 
-leven@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/leven/-/leven-2.1.0.tgz#c2e7a9f772094dee9d34202ae8acce4687875580"
-  integrity sha1-wuep93IJTe6dNCAq6KzORoeHVYA=
-
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -5245,10 +5240,10 @@ magic-string@^0.25.1:
   dependencies:
     sourcemap-codec "^1.4.1"
 
-magicpen@^6.0.2:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/magicpen/-/magicpen-6.1.0.tgz#ca7f3210a2f025e466ab8c33854446586df744df"
-  integrity sha512-09P2y3BcZfU9SX57V7IbUkODvYtvWLUuc8C26fX3N1jDaXKNjWpY+hQsLQjdMT256f80wTunW9OLR6gMB8Ke7g==
+magicpen@^6.1.1:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/magicpen/-/magicpen-6.2.0.tgz#368483d5e2735d44740f64aa1d36010d62a6b007"
+  integrity sha512-i9niB9+3t5z5gUCo/Kh3KlLycrduXfPq3YXICmCCDKxsvMRp4wvsngr+nYGUq0EZdlUaj9OKoGlMUVvj5p9ogA==
   dependencies:
     ansi-styles "2.0.0"
     color-diff "0.1.7"
@@ -7613,6 +7608,11 @@ uglify-js@^3.1.4:
     commander "~2.19.0"
     source-map "~0.6.1"
 
+ukkonen@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ukkonen/-/ukkonen-1.4.0.tgz#594629234ceccbf7e44187ad9fedbeb4866a2e5f"
+  integrity sha512-g8SLGxflI0/VNH2C8j66KcfJXrU5StJglRQBYPNiChXFlOrqqYM1icOykOAAUgTeBpktaEuCm9hjpPinQ080PA==
+
 unexpected-bluebird@2.9.34-longstack2:
   version "2.9.34-longstack2"
   resolved "https://registry.yarnpkg.com/unexpected-bluebird/-/unexpected-bluebird-2.9.34-longstack2.tgz#49acac753b0556ded6025210ee96182307d2b2c9"
@@ -7636,18 +7636,18 @@ unexpected-sinon@^10.10.1:
   resolved "https://registry.yarnpkg.com/unexpected-sinon/-/unexpected-sinon-10.11.2.tgz#43005d659068c393964397168271597757d62176"
   integrity sha512-N2KIKPweTVs6AK8cDKQTUwu0fGWyGt+cI/UJZ/eltAyOKgsHL9eILttdGfpZjI/iMYcHcbtUwIlXoHfmh6EcBw==
 
-unexpected@^11.0.1:
-  version "11.7.0"
-  resolved "https://registry.yarnpkg.com/unexpected/-/unexpected-11.7.0.tgz#3dfa9b7a0d22216326074c09b5fb1e92c772e482"
-  integrity sha512-tzqwJ8l63P62Kd49OpAn7zVflTLG8oD6YRGCIXHm6N9r/3rX8VWVut4raT8Hg/bLdzQe7bKk/t8RqaecmJRt1w==
+unexpected@^11.12.0:
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/unexpected/-/unexpected-11.12.0.tgz#120329d8b17e407ff8479d549d09b19a7e5ad236"
+  integrity sha512-AFPipfuoCJGJWYvh8U8LSJsNsOXnhIoGczPoW+rKc4Zpe9qrAFN4yTuxC4LVeoq2R9ImHGcoZZQb0auuNyWgtA==
   dependencies:
     array-changes "3.0.1"
     array-changes-async "3.0.1"
     detect-indent "3.0.1"
     diff "4.0.1"
     greedy-interval-packer "1.2.0"
-    leven "2.1.0"
-    magicpen "^6.0.2"
+    magicpen "^6.1.1"
+    ukkonen "^1.4.0"
     unexpected-bluebird "2.9.34-longstack2"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
