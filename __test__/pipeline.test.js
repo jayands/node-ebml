@@ -45,10 +45,10 @@ describe('ebml', () => {
         },
       ]);
 
-      encoder.pipe(decoder).on('data', (data) => {
-        expect(data[1].name, 'to be', 'Cluster');
-        expect(data[1].start, 'to be', 0);
-        expect(data[1].end, 'to be', -1);
+      encoder.pipe(decoder).on('data', ([, { name, start, end }]) => {
+        expect(name, 'to be', 'Cluster');
+        expect(start, 'to be', 0);
+        expect(end, 'to be', -1);
         done();
       });
       encoder.on('finish', done);
