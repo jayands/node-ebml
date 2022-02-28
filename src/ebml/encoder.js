@@ -5,10 +5,19 @@ import tools from './tools';
 const debug = require('debug')('ebml:encoder');
 
 function encodeTag(tagId, tagData, end) {
+  const data = [Buffer.from(tagId.toString(16), 'hex')];
   if (end === -1) {
-    return Array.from([tagId, Buffer.from('01ffffffffffffff', 'hex'), tagData]);
+    data.push(Buffer.from('01ffffffffffffff', 'hex'));
+  } else {
+    data.push(tools.writeVint(tagData.length));
   }
-  return Array.from([tagId, tools.writeVint(tagData.length), tagData]);
+
+  // cast ArrayBuffer to Buffer
+  if (!(tagData instanceof Buffer)) {
+    tagData = Buffer.from(tagData); // eslint-disable-line no-param-reassign
+  }
+  data.push(tagData);
+  return Buffer.concat(data);
 }
 
 /**
@@ -153,7 +162,7 @@ export default class EbmlEncoder extends Transform {
    */
   static getSchemaInfo(tagName) {
     const tagId = Array.from(schema.keys()).find(
-      str => schema.get(str).name === tagName,
+      (str) => schema.get(str).name === tagName,
     );
     if (tagId) {
       return tagId;
@@ -181,7 +190,7 @@ export default class EbmlEncoder extends Transform {
       if (this.stack.length > 0) {
         this.stack[this.stack.length - 1].children.push({ data });
       } else {
-        this.bufferAndFlush(data.buffer);
+        this.bufferAndFlush(data);
       }
     }
   }
@@ -216,11 +225,10 @@ export default class EbmlEncoder extends Transform {
       children: [],
       data: { buffer: Buffer.from([]) },
     };
-    const childTagDataBuffers = tag.children.map(child => child.data);
-    tag.data = encodeTag(tag.id, Array.from(childTagDataBuffers), tag.end);
+    const childTagDataBuffers = tag.children.map((child) => child.data);
+    tag.data = encodeTag(tag.id, Buffer.concat(childTagDataBuffers), tag.end);
     if (this.stack.length < 1) {
-      this.bufferAndFlush(tag.data.buffer);
+      this.bufferAndFlush(tag.data);
     }
-    this.end();
   }
 }

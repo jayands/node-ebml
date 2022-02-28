@@ -10,11 +10,11 @@ module.exports = {
     Buffer: true,
     TextDecoder: true,
   },
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2022,
     ecmaFeatures: {
-      jsx: false
+      jsx: false,
     },
     sourceType: 'module',
   },
@@ -26,24 +26,7 @@ module.exports = {
   ],
   plugins: ['node', 'import', 'prettier', 'flowtype'],
   rules: {
-    'node/no-unsupported-features/es-syntax': 'off',
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        trailingComma: 'all',
-      },
-    ],
+    'prettier/prettier': ['error'],
     'no-bitwise': 'off',
-    'no-extra-parens': [
-      'off',
-      'all',
-      {
-        conditionalAssign: true,
-        nestedBinaryExpressions: false,
-        returnAssign: false,
-        enforceForArrowConditionals: false,
-      },
-    ],
   },
 };

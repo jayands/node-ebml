@@ -83,7 +83,7 @@ export default class Tools {
       return a1;
     }
 
-    return Buffer.from([...a1, ...a2]);
+    return Buffer.concat([a1, a2]);
   }
 
   /**
@@ -95,7 +95,7 @@ export default class Tools {
    */
   static readHexString(buff, start = 0, end = buff.byteLength) {
     return Array.from(buff.slice(start, end))
-      .map(q => Number(q).toString(16))
+      .map((q) => Number(q).toString(16))
       .reduce((acc, current) => `${acc}${current.padStart(2, '0')}`, '');
   }
 
