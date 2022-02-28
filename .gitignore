@@ -185,3 +185,10 @@ lib/
 /flow-typed/npm/
 # https://atom.io/packages/atomic-management
 .atom/*
+.yarn/*
+!.yarn/cache/
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
