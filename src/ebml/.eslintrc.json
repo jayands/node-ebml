@@ -1,1 +1,6 @@
-{ "rules": { "no-underscore-dangle": "off" } }
+{
+  "rules": {
+    "no-underscore-dangle": "off",
+    "node/no-unsupported-features/es-syntax": "off"
+  }
+}
