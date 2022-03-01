@@ -110,6 +110,7 @@
   "lint-staged": {
     "*.js": "eslint --fix --no-ignore",
     "*.json": "prettier --write",
+    "*.yml": "prettier --write",
     "README.md": "prettier --write"
   },
   "packageManager": "yarn@3.2.0"
