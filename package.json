@@ -32,9 +32,9 @@
     "format"
   ],
   "dependencies": {
-    "bl": "~5.0.0",
+    "bl": "~5.1.0",
     "buffers": "^0.1.1",
-    "debug": "~4.3.3"
+    "debug": "~4.3.6"
   },
   "devDependencies": {
     "@babel/core": "~7.17.5",
